@@ -1,1 +1,5 @@
-test
+- name: Test Ansible connection
+  hosts: debian_vms
+  tasks:
+    - name: Ping the target machines
+      ansible.builtin.ping:
