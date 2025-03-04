@@ -1,5 +1,6 @@
 - name: Test Ansible connection
   hosts: debian_vms
+  gather_facts: no
   tasks:
     - name: Ping the target machines
       ansible.builtin.ping:
