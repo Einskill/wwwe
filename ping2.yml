@@ -3,8 +3,8 @@
   gather_facts: false
 
   vars:
-    # Default 30 Sekunden, kann in Semaphore per Extra Vars überschrieben werden
-    ping_interval: "{{ ping_interval | default(30) }}"
+    # separater Default-Wert, kein rekursiver Bezug
+    default_ping_interval: 30
 
   tasks:
     - name: Ping the target machines
@@ -12,5 +12,6 @@
 
     - name: Pause before next ping
       ansible.builtin.pause:
-        seconds: "{{ ping_interval | int }}"
-      when: ping_interval | int > 0
+        # benutze entweder die Extra-Var ping_interval oder den Default
+        seconds: "{{ (ping_interval | default(default_ping_interval)) | int }}"
+      when: "(ping_interval | default(default_ping_interval) | int) > 0"
