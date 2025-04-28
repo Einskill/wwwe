@@ -1,18 +1,16 @@
 - name: Test Ansible connection
   hosts: debian_vms
-  gather_facts: no
+  gather_facts: false
 
-  # Abfrage beim Playbook-Start
-  vars_prompt:
-    - name: ping_interval
-      prompt: "Wie häufig sollen die Systeme angepingt werden? (in Sekunden)"
-      private: no
+  vars:
+    # Default 30 Sekunden, kann in Semaphore per Extra Vars überschrieben werden
+    ping_interval: "{{ ping_interval | default(30) }}"
 
   tasks:
     - name: Ping the target machines
       ansible.builtin.ping:
 
     - name: Pause before next ping
-      pause:
-        seconds: "{{ ping_interval }}"
-      when: ping_interval|int > 0
+      ansible.builtin.pause:
+        seconds: "{{ ping_interval | int }}"
+      when: ping_interval | int > 0
